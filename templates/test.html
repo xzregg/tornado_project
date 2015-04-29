@@ -1,0 +1,10 @@
+<br>
+{{ "%0.2f"%(handler.request.request_time()*1000) }}
+<br>
+{{handler.request.uri}}
+<br>
+{{reverse_url}}
+<br>
+{{handler.url}}
+
+{{reverse_url('views.test',12)}}
