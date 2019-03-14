@@ -11,6 +11,24 @@ from urls import router
 import logging
 
 
+class CookieSession(object):
+    def __init__(self, handler):
+        assert isinstance(handler, tornado.web.RequestHandler)
+        self.handler = handler
+
+    def __getitem__(self, key):
+        return self.handler.get_secure_cookie(key)
+
+    def __setitem__(self, key, value):
+        self.handler.set_secure_cookie(key, str(value))
+
+    def clear(self):
+        self.handler.clear_all_cookies()
+
+    def save(self):
+        pass
+
+
 class BaseHandler(tornado.web.RequestHandler):
     escape = tornado.escape
 
@@ -29,7 +47,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def initialize(self):
         self._st = time.time()
-        self.session = Session(self.get_session_id())
+        self.session = CookieSession(self)  # Session(self.get_session_id())
         if DEBUG:
             print 'initialize' + '-' * 40
             # print self.cookies

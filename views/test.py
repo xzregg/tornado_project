@@ -20,6 +20,9 @@ from urls import router
 @router.route('^/phone[/]?$')
 class phone(BaseHandler):
     def get(self):
+        print self.session['asd']
+        self.session['asd'] = 3123
+        print self.session
         self.render('phone.html', locals())
 
     def post(self, *args, **kwargs):
