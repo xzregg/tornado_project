@@ -1,19 +1,25 @@
-#coding:utf-8
-#一堆工具
+# -*- coding: utf-8 -*-
+# @Time    : 2019-03-14 17:59
+# @Author  : xzr
+# @Software: PyCharm
+# @Contact : xzregg@gmail.com
+# @Desc    : 一堆工具
 
 
 import traceback
 import hashlib
 import json
 import decimal
-import os,sys
+import os, sys
+
 try:
     import cStringIO as StringIO
 except:
     traceback.print_exc()
     import StringIO
 
-def mkdirs(path,mode=0755):
+
+def mkdirs(path, mode=0755):
     try:
         os.makedirs(path, mode)
     except:
@@ -29,41 +35,49 @@ class DecimalEncoder(json.JSONEncoder):
             return (str(o) for o in [o])
         return super(DecimalEncoder, self)._iterencode(o, markers)
 
+
 def trace_msg(is_log=False):
     '''跟踪消息
     '''
-    fp = StringIO.StringIO() 
+    fp = StringIO.StringIO()
     traceback.print_exc(file=fp)
     message = fp.getvalue()
     del fp
     return message
 
+
 def md5(s):
-    signStr = hashlib.md5() 
+    signStr = hashlib.md5()
     signStr.update(s.encode('utf-8'))
     return signStr.hexdigest()
 
 
 def filter_sql(sql):
     import re
-    p = re.compile( '(update|delete|modify|column|lock|drop|table)', re.I)
-    sql = p.sub( '', sql)
+    p = re.compile('(update|delete|modify|column|lock|drop|table)', re.I)
+    sql = p.sub('', sql)
     return sql
 
-#时间类的
-import time,datetime,re
+
+# 时间类的
+import time, datetime, re
+
 TIMEFORMAT = '%H:%M:%S'
 DATEFORMAT = '%Y-%m-%d'
 DATETIMEFORMAT = '%Y-%m-%d %H:%M:%S'
-CONVERT_FORMAT = {"datetime":DATETIMEFORMAT, "date":DATEFORMAT, "time":TIMEFORMAT}
+CONVERT_FORMAT = {"datetime": DATETIMEFORMAT, "date": DATEFORMAT, "time": TIMEFORMAT}
+
+
 def str_to_datetime(datetime_str):
-    return datetime.datetime.strptime(datetime_str,DATETIMEFORMAT)
+    return datetime.datetime.strptime(datetime_str, DATETIMEFORMAT)
+
 
 def datetime_to_str(_datetime):
     '''
     @_datetime 要转成字符串datetime对象
     '''
-    return _datetime.strftime(DATETIMEFORMAT) 
+    return _datetime.strftime(DATETIMEFORMAT)
+
 
 def timestamp_to_datetime_str(timestamp, _format="datetime"):
     '''
@@ -74,13 +88,15 @@ def timestamp_to_datetime_str(timestamp, _format="datetime"):
         return ""
     return datetime.datetime.fromtimestamp(timestamp).strftime(CONVERT_FORMAT[_format])
 
+
 def datetime_to_timestamp(datetime_or_str):
     '''
     @datetime_or_str datetime或者日期时间字符串转时间戳
     '''
-    if isinstance(datetime_or_str,basestring):
+    if isinstance(datetime_or_str, basestring):
         datetime_or_str = str_to_datetime(datetime_or_str)
     return int(time.mktime(datetime_or_str.timetuple()))
+
 
 def get_now_str():
     '''获取现在时间字符串
@@ -88,11 +104,13 @@ def get_now_str():
     '''
     return datetime.datetime.now().strftime(DATETIMEFORMAT)
 
+
 def get_today_str():
     '''获取当天字符串
     @
     '''
     return datetime.datetime.now().strftime('%Y-%m-%d')
+
 
 def get_timezone():
     '''获取当前时区
@@ -100,20 +118,26 @@ def get_timezone():
     '''
     return -time.timezone / 3600
 
+
 import calendar
-def add_months(dt,months):
+
+
+def add_months(dt, months):
     '''月份增加
     '''
     month = dt.month - 1 + months
     year = dt.year + month / 12
     month = month % 12 + 1
-    day = min(dt.day,calendar.monthrange(year,month)[1])
+    day = min(dt.day, calendar.monthrange(year, month)[1])
     return dt.replace(year=year, month=month, day=day)
 
+
 _DATE_REGEX = re.compile(
-    r'(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2})'
-    r'(?: (?P<hour>\d{1,2}):(?P<minute>\d{1,2}):(?P<second>\d{1,2})'
-    r'(?:\.(?P<microsecond>\d{1,6}))?)?')
+        r'(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2})'
+        r'(?: (?P<hour>\d{1,2}):(?P<minute>\d{1,2}):(?P<second>\d{1,2})'
+        r'(?:\.(?P<microsecond>\d{1,6}))?)?')
+
+
 def convert_to_datetime(input):
     """
     Converts the given object to a datetime object, if possible.
@@ -139,3 +163,5 @@ def convert_to_datetime(input):
         values = dict(values)
         return datetime(**values)
     raise TypeError('Unsupported input type: %s' % type(input))
+
+

@@ -1,5 +1,8 @@
-#coding:utf-8
-#自动注册url
+# -*- coding: utf-8 -*-
+# @Time    : 2019-03-14 17:59
+# @Author  : xzr
+# @Contact : xzregg@gmail.com
+# @Desc    : 自动注册url
 
 
 import inspect,os,sys

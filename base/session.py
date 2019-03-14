@@ -1,5 +1,8 @@
-#coding:utf-8
-#定义session 类
+# -*- coding: utf-8 -*-
+# @Time    : 2019-03-14 17:59
+# @Author  : xzr
+# @Contact : xzregg@gmail.com
+# @Desc    : 定义session 类
 
 import sys,os,time
 import memcache

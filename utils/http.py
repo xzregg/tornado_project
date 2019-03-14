@@ -5,12 +5,13 @@ import traceback
 import socket
 import urllib,urllib2
 
+
 def urldecode(query_str):
     d = {}
     a = query_str.split('&')
     for s in a:
         if s.find('='):
-            k,v = map(urllib.unquote, s.split('='))
+            k, v = map(urllib.unquote, s.split('='))
             try:
                 d[k].append(v)
             except KeyError:

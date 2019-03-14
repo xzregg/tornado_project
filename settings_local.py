@@ -2,7 +2,7 @@
 # @Time    : 2019-03-14 17:59
 # @Author  : xzr
 # @Contact : xzregg@gmail.com
-# @Desc    : 项目配置
+# @Desc    : 本地项目配置
 
 import sys
 import os
@@ -13,7 +13,7 @@ SESSION_ENGINE = 'memcache://127.0.0.1:11211'
 __od = os.path.dirname
 
 # 开启debug模式自动重启
-DEBUG = False
+DEBUG = True
 
 PROJECT_ROOT = __od(os.path.abspath(__file__))
 

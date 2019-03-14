@@ -1,10 +1,12 @@
-# -*- coding:UTF-8 -*-
-#线程池 by xzr
+# -*- coding: utf-8 -*-
+# @Time    : 2019-03-14 17:59
+# @Author  : xzr
+# @Contact : xzregg@gmail.com
+# @Desc    : 线程池 by xzr
 
 import threading
 import time,datetime
 import Queue
-import MySQLdb
 import os,sys
 import traceback
 import functools
@@ -24,15 +26,16 @@ class ThreadWork(threading.Thread):
             self.manager = manager
             self.setDaemon(True)
             self.mark = mark
+ 
 
-        def run(self,get_ret=True):
+        def run(self):
             while 1:
                 try:
                     func_grgs = self.manager.jobQ.get()
                     if func_grgs:
                         #print '%s get the job' % self.mark
                         res = apply(*func_grgs)
-                        if get_ret :
+                        if not self.manager.not_ret :
                             self.manager.resultQ.put(res)
                         self.manager.jobQ.task_done()
                     else:
@@ -43,8 +46,9 @@ class ThreadWork(threading.Thread):
                     time.sleep(0.01)
 
 class ThreadPool(object):
-        def __init__(self,pool_size=100):
+        def __init__(self,pool_size=100,not_ret = False):
             self.pool_size = pool_size
+            self.not_ret = not_ret
             self.jobQ = Queue.Queue(0)
             self.resultQ = Queue.Queue(0)
             self.threads = []
@@ -72,9 +76,7 @@ class ThreadPool(object):
         def close(self):
             for _ in xrange(len(self.threads)):
                 self.jobQ.put(None)
+            self.join()
         def join(self):
             for t in self.threads:
                 t.join()
-        def __del__(self):
-            self.close()
-            self.join()
