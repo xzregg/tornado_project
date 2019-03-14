@@ -1,0 +1,18 @@
+sdk_vs:
+  build: .
+  container_name: tornado_project
+  image: sdk_vs
+  command: gunicorn server -w 4 -b 0.0.0.0:8000 --access-logfile - -k 'tornado'
+  #对应于docker run中的 -i ,第二个对应于 -t .
+  stdin_open: true
+  tty: true
+  volumes:
+    - .:/data/tornado_project
+  ports:
+    - "8000:8000"
+  restart: always
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "100m"
+      max-file: 3
