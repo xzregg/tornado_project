@@ -24,8 +24,3 @@ SETTINGS = {
         'cookie_secret': '23123123',
         "gzip"         : True,
 }
-
-try:
-    from settings_local import *
-except:
-    pass

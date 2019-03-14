@@ -25,7 +25,4 @@ SETTINGS = {
         "gzip"         : True,
 }
 
-try:
-    from settings_local import *
-except:
-    pass
+from environment import *

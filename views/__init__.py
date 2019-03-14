@@ -28,6 +28,7 @@ class BaseHandler(tornado.web.RequestHandler):
         return sid
 
     def initialize(self):
+        self._st = time.time()
         self.session = Session(self.get_session_id())
         if DEBUG:
             print 'initialize' + '-' * 40
@@ -52,7 +53,7 @@ class index(BaseHandler):
 @router.route('^/test/(?P<id>.*)')
 class test(BaseHandler):
     def get(self, id):
-        L = Logger('bb')
+        L = Logger('test', 'test')
         L.info('asdasdasd')
         self.url = '----------'
         self.write('123')
