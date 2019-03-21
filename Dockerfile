@@ -41,16 +41,16 @@ RUN echo \
   && easy_install pip \
   && pip install --upgrade pip \
   && if [[ ! -e /usr/bin/pip ]]; then ln -sf /usr/bin/pip2.7 /usr/bin/pip; fi \
-  && mkdir -pv $WORKDIR \
+  && mkdir -pv $WORKDIR
   #安装python包
-  && pip install --no-cache-dir -r requirements.txt  \
+RUN pip install --no-cache-dir -r requirements.txt  \
   #之后删除编译环境包
   && apk del --no-cache $BUILD_PACKAGES \
   && rm -rf /var/cache/apk/* \
   && rm -rf /root/.cache \
   && rm -rf /tmp/*
 	
-CMD gunicorn server -w 4 -b 0.0.0.0:8000 --access-logfile - -k 'tornado'
+CMD sh gunicornd.sh start -s
 
 #docker run -it -d -v `pwd`:/data/tornado_project  --log-opt max-size=10m --log-opt max-file=3 --name=tornado_project sdk_vs:latest /bin/bash
 #docker exec -it tornado_project /bin/bash

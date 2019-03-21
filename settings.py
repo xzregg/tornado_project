@@ -7,10 +7,11 @@
 import sys
 import os
 
+__od = os.path.dirname
+
 SESSION_ENGINE = 'memcache://127.0.0.1:11211'
 # SESSION_ENGINE='redis://127.0.0.1:1111'
-
-__od = os.path.dirname
+SESSION_EXPIRE_TIME = 7200
 
 # 开启debug模式自动重启
 DEBUG = False

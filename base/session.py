@@ -7,6 +7,7 @@
 import sys, os, time
 import memcache
 import redis
+import tornado.web
 
 try:
     import cPickle as Pickle
@@ -20,7 +21,7 @@ class SessionEngine(object):
     address = None
     session_data = {}
 
-    def __init__(self, sid):
+    def __init__(self, sid, handler=None):
         self.sid = sid
         self.__class__.session_data.setdefault(sid, {})
         self.session_data = self.__class__.session_data[sid]
@@ -38,11 +39,10 @@ class RedisSessionEngine(SessionEngine):
     rc = None
     address = None
 
-    def __init__(self, sid):
+    def __init__(self, sid, handler=None):
         if not self.__class__.rc:
             self.__class__.rc = redis.Redis(*self.address, db=0)
         self.sid = 'session_%s' % sid
-        # print self.rc
         _s = self.rc.get(self.sid)
         self.session_data = Pickle.loads(_s) if _s else {}
 
@@ -58,7 +58,7 @@ class MemcacheSessionEngine(SessionEngine):
     mc = None
     address = None
 
-    def __init__(self, sid):
+    def __init__(self, sid, handler=None):
         if not self.__class__.mc:
             self.__class__.mc = memcache.Client(self.address)
 
@@ -73,6 +73,29 @@ class MemcacheSessionEngine(SessionEngine):
         self.mc.set(self.sid, self.session_data, expire)
 
 
+class CookieSessionEngine(SessionEngine):
+    """
+    使用tornado Cookie 保存session数据
+    """
+
+    def __init__(self, sid, handler=None):
+        assert isinstance(handler, tornado.web.RequestHandler)
+        self.handler = handler
+        self.session_data = {}
+        for key, value in self.handler.cookies.items():
+            self.session_data[key] = self.handler.get_secure_cookie(key)
+
+    def clear_session(self):
+        self.handler.clear_all_cookies()
+
+    def save_session(self, expire=7200):
+        for key, value in self.session_data.items():
+            if key == 'sid':
+                continue
+            self.handler.set_secure_cookie(key, str(value), expires=int(time.time()) + expire)
+
+
+
 class SessionEngineFactory(object):
     def __init__(self, engine_type=SESSION_ENGINE):
         _type, _address = engine_type.split('://')
@@ -83,6 +106,9 @@ class SessionEngineFactory(object):
             _ip, _port = _address.split(':')
             self.se = RedisSessionEngine
             self.se.address = (_ip, int(_port))
+        elif _type == 'cookiess':
+            self.se = CookieSessionEngine
+
         print 'USE %s ENGINE !' % _type
         assert self.se, 'Get Session Error'
 
@@ -94,9 +120,9 @@ SessionEngine = SessionEngineFactory(SESSION_ENGINE).get_session_engine()
 
 
 class Session(dict):
-    def __init__(self, sid):
+    def __init__(self, sid, handler=None):
         super(Session, self).__init__()
-        self.se = SessionEngine(sid)
+        self.se = SessionEngine(sid, handler)
         self.update(self.se.session_data)
 
     def __getitem__(self, key):
@@ -104,11 +130,11 @@ class Session(dict):
             return None
         return super(Session, self).__getitem__(key)
 
-    def save(self):
+    def save(self,expire):
+
         if cmp(self, self.se.session_data):
-            # print 'is save'
             self.se.session_data = self.copy()
-            self.se.save_session()
+            self.se.save_session(expire)
 
 
 if __name__ == '__main__':
