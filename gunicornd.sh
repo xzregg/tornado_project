@@ -20,10 +20,10 @@ BIND="0.0.0.0:9010"
 
 
 #基本启动命令不使用daemon模式
-BASE_CMD="gunicorn $APP"
+BASE_CMD="gunicorn $APP -c $CONFIG_FILE --error-logfile $LOG_FILE --pid $PID_FILE -b $BIND"
 
 export PYTHONUNBUFFERED=TRUE
-START_CMD="$BASE_CMD -D -c $CONFIG_FILE --error-logfile $LOG_FILE --pid $PID_FILE -b $BIND"
+START_CMD="$BASE_CMD -D"
 
 #配合-s在supervisord监控启动
 [ "$ARGV" == "-s" ] && START_CMD=$BASE_CMD
