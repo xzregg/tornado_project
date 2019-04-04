@@ -14,7 +14,7 @@ ARGV=$2
 LOG_FILE="$MY_PATH/logs/gunicorn.log"
 PID_FILE="$MY_PATH/tmp/gunicorn.pid"
 CONFIG_FILE="$MY_PATH/gunicorn_config.py"
-PROGRAM="$MY_PATH"
+
 APP="server"
 BIND="0.0.0.0:9010"
 

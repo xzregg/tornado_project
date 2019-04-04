@@ -7,14 +7,8 @@
 # @Desc    :
 
 
-import sys, os, time, datetime, uuid
-import tornado.escape
-import tornado.web
-from views import BaseHandler
-from settings import DEBUG
-from base.session import Session
-from base.log import Logger
 from urls import router
+from views import BaseHandler
 
 
 @router.route('^/phone[/]?$')

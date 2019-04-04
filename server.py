@@ -7,15 +7,15 @@
 # @Desc    : 项目开始布局 https://github.com/bueda/tornado-boilerplate
 
 
-import time, os, sys
-from tornado.options import define, options
-import tornado.web
-import tornado.httpserver
 import logging
-from tornado.options import define, options, parse_command_line
 import signal
-from urls import URLS
+
+import tornado.httpserver
+import tornado.web
+from tornado.options import define, options
+
 from settings import SETTINGS
+from urls import URLS
 
 define("port", default=9009, help="监听的端口", type=int)
 
@@ -56,5 +56,5 @@ register_signal()
 init_logging()
 
 if __name__ == '__main__':
-    print 'start server http://0.0.0.0:%s/' % options.port
+    print('start server http://0.0.0.0:%s/' % options.port)
     run_server()
