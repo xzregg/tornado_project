@@ -17,3 +17,8 @@ services:
       options:
         max-size: "100m"
         max-file: "3"
+    environment:
+      MYSQL_ROOT_PASSWORD: redhat
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress

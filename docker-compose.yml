@@ -1,17 +1,21 @@
 sdk_vs:
   container_name: tornado_project
-  image: tornado_project
-  #command: sh gunicornd.sh start -s
+  image: xzregg/tornado_project
+  command: sh gunicornd.sh start -s
   #对应于docker run中的 -i ,第二个对应于 -t .
   stdin_open: true
   tty: true
   volumes:
     - .:/data/tornado_project
   ports:
-    - "9010:9010"
+    - "8000:9010"
   restart: always
-  logging:
-    driver: "json-file"
-    options:
-      max-size: "100m"
-      max-file: "3"
+  log_driver: "json-file"
+  log_opt:
+    max-size: "100m"
+    max-file: "3"
+  environment:
+    MYSQL_ROOT_PASSWORD: redhat
+    MYSQL_DATABASE: wordpress
+    MYSQL_USER: wordpress
+    MYSQL_PASSWORD: wordpress
