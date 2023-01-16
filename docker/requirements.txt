@@ -23,7 +23,7 @@ Pygments==2.2.0
 pyparsing==2.2.0
 pyquery==1.4.0
 python-memcached==1.58
-PyYAML==3.12
+PyYAML==5.4
 pymongo
 requests==2.19.1
 rsa==3.4.2
